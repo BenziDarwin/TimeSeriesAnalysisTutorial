@@ -154,6 +154,24 @@ def load_population(data_dir: Path = DATA_DIR) -> pd.DataFrame:
     return raw[["division", "parish_raw", "parish_key", *numeric]].dropna(subset=["division"])
 
 
+def population_denominator_summary(population: pd.DataFrame) -> pd.DataFrame:
+    """Return audited division denominators for rate interpretation and offsets."""
+    population_columns = [column for column in population if column.startswith("population_")]
+    summary = population.groupby("division", as_index=False).agg(
+        parishes=("parish_key", "nunique"),
+        **{column: (column, "sum") for column in population_columns},
+    )
+    if (summary["population_total"] <= 0).any():
+        raise ValueError("Population denominators must be positive for every Kampala division")
+    if not np.allclose(
+        summary["population_male"] + summary["population_female"],
+        summary["population_total"],
+        equal_nan=False,
+    ):
+        raise ValueError("Male and female population denominators do not sum to the division total")
+    return summary.sort_values("division").reset_index(drop=True)
+
+
 def age_band(age: object) -> str | None:
     age = pd.to_numeric(age, errors="coerce")
     if pd.isna(age) or age < 0 or age > 120:
@@ -287,10 +305,19 @@ def division_geometry(data_dir: Path = DATA_DIR) -> gpd.GeoDataFrame:
     return shape[shape.division.isin(KAMPALA_DIVISIONS)].drop_duplicates("division")[["division", "geometry"]]
 
 
-def plot_division_map(summary: pd.DataFrame, column: str, title: str, data_dir: Path = DATA_DIR):
-    """Choropleth with a no-data-safe legend for a spatial summary table."""
+def plot_division_map(summary: pd.DataFrame, column: str, title: str, data_dir: Path = DATA_DIR,
+                      legend_label: str | None = None, annotate: bool = True):
+    """Choropleth with labelled division values and a no-data-safe legend."""
     geo = division_geometry(data_dir).merge(summary[["division", column]], on="division", how="left")
-    ax = geo.plot(column=column, cmap="OrRd", edgecolor="white", linewidth=1, legend=True, missing_kwds={"color": "lightgrey", "label": "No data"}, figsize=(9, 7))
+    ax = geo.plot(column=column, cmap="OrRd", edgecolor="white", linewidth=1, legend=True,
+                  legend_kwds={"label": legend_label} if legend_label else None,
+                  missing_kwds={"color": "lightgrey", "label": "No data"}, figsize=(9, 7))
+    if annotate:
+        for row in geo.dropna(subset=[column]).itertuples():
+            point = row.geometry.representative_point()
+            ax.annotate(f"{row.division}\n{getattr(row, column):,.1f}", (point.x, point.y),
+                        ha="center", va="center", fontsize=8,
+                        bbox={"boxstyle": "round,pad=0.2", "fc": "white", "ec": "none", "alpha": 0.8})
     ax.set_title(title); ax.set_axis_off()
     return ax
 
@@ -307,6 +334,27 @@ def demographic_spatial_summary(panel: pd.DataFrame) -> pd.DataFrame:
         recorded_cases=("recorded_cases", "sum"), mean_pm25=("pm2_5", "mean"),
         mean_rate_per_100k=("recorded_rate_per_100k", "mean"), periods=("period", "nunique"),
     )
+
+
+def diagnosis_population_rate_summary(records: pd.DataFrame, population: pd.DataFrame) -> pd.DataFrame:
+    """Calculate labelled diagnosis-specific recorded-case rates by division.
+
+    The denominator is the total division population, and rates are annualised
+    over the observed 2020--2024 record-review years. They describe facility
+    records, rather than community incidence.
+    """
+    data = records.loc[records.in_linked_window & records.valid_kampala_division].copy()
+    data = data.dropna(subset=["division", "diagnosis", "visit_date"])
+    data["year"] = data.visit_date.dt.year
+    division_population = population_denominator_summary(population)[["division", "population_total"]]
+    observed_years = data.groupby("division", as_index=False).agg(observed_years=("year", "nunique"))
+    rates = data.groupby(["division", "diagnosis"], as_index=False).agg(recorded_cases=("diagnosis", "size"))
+    rates = rates.merge(division_population, on="division", how="left", validate="many_to_one")
+    rates = rates.merge(observed_years, on="division", how="left", validate="many_to_one")
+    rates["annualized_recorded_rate_per_100k"] = (
+        rates.recorded_cases / rates.population_total / rates.observed_years * 100000
+    )
+    return rates.sort_values(["diagnosis", "division"]).reset_index(drop=True)
 
 
 def parish_linkage_summary(records: pd.DataFrame) -> pd.DataFrame:
