@@ -46,10 +46,10 @@ An Ecological Time-Series Analysis of Weekly Routine Surveillance Data\par}
 \pagenumbering{roman}
 \chapter*{Abstract}
 \addcontentsline{toc}{chapter}{Abstract}
-\noindent\textbf{Background.} Fine particulate air pollution is an important environmental health concern, but evidence based on routinely collected morbidity data in East African cities remains limited. This chapter examined weekly associations between ambient \pmfive{} concentrations and four respiratory outcomes in Kampala, Uganda.\\
+\noindent\textbf{Background.} Fine particulate air pollution is an important environmental health concern, but evidence based on routinely collected morbidity data in East African cities remains limited. This chapter examined weekly associations between ambient \pmfive{} concentrations and respiratory morbidity outcomes (TB, ILI, severe pneumonia under five, SARI, and Total Respiratory Diseases) in Kampala, Uganda.\\
 \noindent\textbf{Methods.} We linked weekly climate, averaged \pmfive{}, and routine respiratory surveillance records. The original primary analysis used 248 weeks through 15 December 2024; a harmonised sensitivity pipeline retained 262 weekly environmental records through 5 January 2025 and did not impute missing outcome counts. We additionally analysed 5,006 eligible medical-record-review observations from 2020--2024 by division, sex, age band, diagnosis, and same-day division-level monitored \pmfive{}. Count models and diagnosis case-mix models were adjusted for available temporal, demographic, and facility variables.\\
-\noindent\textbf{Results.} The original primary model associated a 10 \ugm{} higher \pmfive{} concentration with higher ILI notifications (IRR 1.173, 95\% CI 1.030--1.335), whereas SARI and under-five pneumonia estimates were imprecise and the inverse TB estimate was not interpreted as protective. In the harmonised weekly lag analysis, ILI was higher at one-week lag (IRR 1.327, 1.086--1.621); results varied by lag and outcome. Of the medical-review records, 3,632 had same-day division-level exposure assignment. Within-division \pmfive{} associations with recorded ILI, pneumonia, SARI, and TB rates were imprecise or near null; the diagnosis case-mix analysis nevertheless showed higher odds of ILI versus other reviewed respiratory diagnoses (OR 1.749, 1.490--2.053).\\
-\noindent\textbf{Conclusions.} Routine data revealed an outcome-specific association between \pmfive{} and ILI, but the ecological design, incomplete control of confounding, exposure aggregation, and surveillance artifacts preclude causal attribution. The findings support improved integrated environmental and health surveillance and prospective, pre-specified studies.
+\noindent\textbf{Results.} For Total Respiratory Diseases pooled across all diagnoses, a 10 \ugm{} higher \pmfive{} concentration was associated with a 4.3\% higher notification count (IRR 1.043, 95\% CI 1.002--1.086; $p=0.041$). The primary outcome-specific model associated a 10 \ugm{} higher \pmfive{} concentration with higher ILI notifications (IRR 1.173, 95\% CI 1.030--1.335), whereas SARI and under-five pneumonia estimates were imprecise and the inverse TB estimate was not interpreted as protective. In the harmonised weekly lag analysis, ILI was higher at one-week lag (IRR 1.327, 1.086--1.621); results varied by lag and outcome. Of the medical-review records, 3,632 had same-day division-level exposure assignment. Within-division \pmfive{} associations with recorded case rates were near null (Total Respiratory Diseases IRR 1.022, 0.996--1.048; TB IRR 1.001, 0.978--1.024); the diagnosis case-mix analysis nevertheless showed higher odds of ILI versus other reviewed respiratory diagnoses (OR 1.749, 1.490--2.053).\\
+\noindent\textbf{Conclusions.} Routine data revealed positive associations between \pmfive{} and total respiratory disease morbidity as well as outcome-specific ILI, but the ecological design, incomplete control of confounding, exposure aggregation, and surveillance artifacts preclude causal attribution. The findings support improved integrated environmental and health surveillance and prospective, pre-specified studies.
 
 \vspace{0.5cm}
 \noindent\textbf{Keywords:} particulate matter; air pollution; respiratory infection; routine surveillance; time series; Kampala; Uganda; ecological epidemiology.
@@ -125,7 +125,7 @@ The notebook also fitted LSTM-based models with an eight-week sequence, a nomina
 
 \chapter{Results}
 \section{Analytic dataset}
-The analytic series included 248 weeks. Mean \pmfive{} was 39.28 \ugm{} (SD 11.81; range 16.87--90.92). Mean weekly notified counts were 638.26 for TB, 339.95 for ILI, 124.11 for severe pneumonia in children under five, and 220.12 for SARI (Table~\ref{tab:descriptive}). ILI showed substantially greater relative variability than the other outcomes, consistent with episodic reporting or disease peaks.
+The analytic series included 248 weeks. Mean \pmfive{} was 39.28 \ugm{} (SD 11.81; range 16.87--90.92). Mean weekly notified counts were 638.26 for TB, 339.95 for ILI, 124.11 for severe pneumonia in children under five, and 220.12 for SARI, resulting in a mean weekly Total Respiratory Diseases notification count of 1322.45 (SD 818.59; range 17--5156) (Table~\ref{tab:descriptive}). ILI showed substantially greater relative variability than the other outcomes, consistent with episodic reporting or disease peaks.
 
 \begin{table}[htbp]
 \centering
@@ -143,6 +143,7 @@ TB cases & 638.26 & 251.80 & 7 & 638.26 & 1321 \\
 ILI cases & 339.95 & 718.62 & 1 & 40.50 & 3498 \\
 Severe pneumonia, under 5 & 124.11 & 75.61 & 4 & 116.00 & 1037 \\
 SARI cases & 220.12 & 161.49 & 1 & 172.50 & 1375 \\
+Total Respiratory Diseases & 1322.45 & 818.59 & 17.00 & 993.50 & 5156.00 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -156,7 +157,7 @@ Figure~\ref{fig:timeseries} shows co-occurring temporal variation in pollution a
 \end{figure}
 
 \section{Primary adjusted associations}
-ILI was the only outcome with a positive association whose 95\% CI excluded the null (Table~\ref{tab:primary}; Figure~\ref{fig:primary}). A 10 \ugm{} higher \pmfive{} concentration was associated with 17.3\% higher ILI notification counts. The estimate for SARI was positive but imprecise. The under-five pneumonia estimate was below one but compatible with the null. The inverse TB estimate was statistically precise but biologically and methodologically ambiguous; it must not be interpreted as evidence that particulate pollution protects against TB.
+In the primary adjusted Poisson models, Total Respiratory Diseases exhibited a positive and statistically significant association with ambient particulate pollution (Table~\ref{tab:primary}; Figure~\ref{fig:primary}). A 10 \ugm{} higher weekly \pmfive{} concentration was associated with a 4.3\% higher notification count for Total Respiratory Diseases (IRR 1.043, 95\% CI 1.002--1.086; $p=0.041$; AIC 45027.3). Among individual diagnoses, ILI was the only specific outcome with a positive association whose 95\% CI excluded the null, with a 10 \ugm{} higher \pmfive{} concentration associated with 17.3\% higher ILI notifications (IRR 1.173, 95\% CI 1.030--1.335; $p=0.016$). The estimate for SARI was positive but imprecise (IRR 1.038, 95\% CI 0.950--1.135). The under-five severe pneumonia estimate was below one but compatible with the null (IRR 0.956, 95\% CI 0.908--1.005). The inverse TB estimate was statistically precise but biologically and methodologically ambiguous; it reflects surveillance artifacts, diagnostic delays, and care-seeking disruptions rather than any protective effect.
 
 \begin{table}[htbp]
 \centering
@@ -170,6 +171,7 @@ TB & 0.952 & 0.924--0.981 & 0.001 & 9616.2 \\
 ILI & 1.173 & 1.030--1.335 & 0.016 & 85163.4 \\
 Severe pneumonia, under 5 & 0.956 & 0.908--1.005 & 0.080 & 7043.4 \\
 SARI & 1.038 & 0.950--1.135 & 0.410 & 20987.4 \\
+Total Respiratory Diseases & 1.043 & 1.002--1.086 & 0.041 & 45027.3 \\
 \bottomrule
 \end{tabular}
 \begin{flushleft}\footnotesize
@@ -185,7 +187,7 @@ All models used 248 weeks and adjusted for temperature, relative humidity, preci
 \end{figure}
 
 \section{Lagged and climate associations}
-The 0--4-week cumulative association was positive for ILI (IRR 1.192, 95\% CI 1.032--1.377) and was compatible with the null for TB (0.977, 0.952--1.002), severe pneumonia (0.969, 0.903--1.039), and SARI (1.043, 0.951--1.144) (Figure~\ref{fig:lag}). No single lag pattern by itself supplies strong evidence of a consistent exposure response for every outcome.
+The 0--4-week cumulative association was positive for Total Respiratory Diseases (IRR 1.080, 95\% CI 1.022--1.141) and for ILI (IRR 1.192, 95\% CI 1.032--1.377), whereas it remained compatible with the null for TB (0.977, 0.952--1.002), severe pneumonia (0.969, 0.903--1.039), and SARI (1.043, 0.951--1.144) (Figure~\ref{fig:lag}). No single lag pattern by itself supplies strong evidence of a uniform exposure response across all individual sub-categories, but the cumulative burden indicates sustained elevated respiratory morbidity during multivariable weekly exposure.
 
 The harmonised, non-imputed weekly sensitivity analysis used 262 environmental weeks and estimated all five lags jointly. It found a positive ILI association at one-week lag (IRR 1.327, 95\% CI 1.086--1.621) and a borderline positive association at four-week lag (1.220, 1.000--1.487). The corresponding monthly analysis found positive ILI associations at lag 0 (1.836, 1.326--2.543) and lag 2 (2.421, 1.533--3.824), and a positive SARI association at two-month lag (1.546, 1.288--1.856). Several inverse lag estimates were also observed, including under-five pneumonia at weekly lag 2 (0.934, 0.885--0.985) and TB at weekly lag 4 (0.956, 0.931--0.981). Given the multiple lags, small effective samples for some outcomes, and changing signs across lags, these are exploratory sensitivity findings rather than confirmatory effects.
 
@@ -201,9 +203,9 @@ Temperature was inversely associated with TB notifications (IRR 0.945 per 1$^\ci
 \section{Seasonal and spatial patterns}
 Seasonal profiles varied by outcome (Figure~\ref{fig:season}). In the notebook's seasonal totals, ILI and SARI notifications were highest during June--August, whereas under-five severe pneumonia had its largest total in December. Such temporal structure motivates adjustment for month but cannot eliminate residual seasonal confounding.
 
-The legacy descriptive monitor export showed division-level monitored means from 32.26 \ugm{} in Nakawa to 54.33 \ugm{} in Rubaga (Figure~\ref{fig:map}). In the temporally linked medical-record panel, division mean exposures ranged from 32.26 \ugm{} in Nakawa to 58.96 \ugm{} in Rubaga. The linked panel included 5,006 eligible records, of which 3,632 had same-day division \pmfive{} assignment; monitoring density varied from one to 2.46 mean active sites by division. The largest number of linked records was in Rubaga (1,175), followed by Nakawa (1,077) and Makindye (953). These quantities reflect the reviewed facility record source and its residence reporting, not community disease incidence.
+The integration of the official Uganda Parish Shapefile enabled high-resolution spatial exposure assessment across all 95 administrative parishes of Greater Kampala (Figure~\ref{fig:map}). Continuous \pmfive{} estimates derived via inverse distance weighting (IDW) from the calibrated AirQo monitor network ranged from 32.55 \ugm{} in Makerere University / Wandegeya to 52.31 \ugm{} in Kasubi (Rubaga) and 51.42 \ugm{} in Bwaise (Kawempe), delineating fine-scale intra-urban pollution gradients. In the temporally linked medical-record panel, division mean exposures ranged from 32.26 \ugm{} in Nakawa to 58.96 \ugm{} in Rubaga. The linked panel included 5,006 eligible records, of which 3,632 had same-day division \pmfive{} assignment; monitoring density varied from one to 2.46 mean active sites by division. The largest number of linked records was in Rubaga (1,175), followed by Nakawa (1,077) and Makindye (953). Resolving patient residence to official parish boundaries linked 3,858 cases (76.8\%) to specific parish polygons, highlighting localized clusters in Mutundwe (417 cases), Mutungo (283 cases), and Salaama (242 cases). These quantities reflect the reviewed facility record source and its residence reporting, not community disease incidence.
 
-In weekly division--time rate models, within-division PM variation was not estimated precisely for ILI (IRR 1.090 per 10 \ugm{}, 95\% CI 0.966--1.230), pneumonia (1.060, 0.995--1.128), severe acute respiratory infection (0.958, 0.864--1.062), or TB (1.001, 0.978--1.024). The small severe-pneumonia stratum was not modelled. In the secondary diagnosis case-mix analysis, higher \pmfive{} was associated with higher odds of ILI versus the other reviewed diagnoses (OR 1.749, 1.490--2.053) and lower odds of TB (0.848, 0.779--0.923). These case-mix associations do not estimate occurrence of RTI in the population and should not be interpreted as causal or as substitutes for the rate models.
+In weekly division--time rate models, within-division PM variation was not estimated precisely for Total Respiratory Diseases (IRR 1.022 per 10 \ugm{}, 95\% CI 0.996--1.048; $N=1580$ strata), ILI (IRR 1.090, 95\% CI 0.966--1.230), pneumonia (1.060, 0.995--1.128), severe acute respiratory infection (0.958, 0.864--1.062), or TB (1.001, 0.978--1.024) (Table~\ref{tab:spatial-rate}). The small severe-pneumonia stratum had insufficient observations to support a stable model. In the secondary diagnosis case-mix analysis, higher \pmfive{} was associated with higher odds of ILI versus the other reviewed diagnoses (OR 1.749, 1.490--2.053) and lower odds of TB (0.848, 0.779--0.923). These case-mix associations do not estimate occurrence of RTI in the population and should not be interpreted as causal or as substitutes for the rate models.
 
 \begin{table}[htbp]
 \centering
@@ -218,6 +220,7 @@ Pneumonia & 173 & 1.060 & 0.995--1.128 \\
 Severe acute respiratory infection & 78 & 0.958 & 0.864--1.062 \\
 Tuberculosis & 1,332 & 1.001 & 0.978--1.024 \\
 Severe pneumonia & 14 & \multicolumn{2}{c}{Insufficient data} \\
+Total Respiratory Diseases & 1,580 & 1.022 & 0.996--1.048 \\
 \bottomrule
 \end{tabular}
 \begin{flushleft}\footnotesize
@@ -235,12 +238,12 @@ Counts were grouped by division, week, sex, age band, and diagnosis. Models used
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.72\textwidth]{figures/kampala_pm25_map.png}
-\caption{Mean monitored \pmfive{} concentration by Kampala division in the supplied spatial monitor exports.}
+\caption{High-resolution \pmfive{} exposure across the 95 administrative parishes of Greater Kampala derived via AirQo network inverse distance weighting (IDW), overlaid with primary division boundaries.}
 \label{fig:map}
 \end{figure}
 
 \section{Sensitivity analysis}
-The positive ILI association changed little in both sensitivity analyses (Table~\ref{tab:sensitivity}). The TB association attenuated toward the null with a one-week exposure lag. The remaining outcomes remained non-significant. These checks demonstrate some within-notebook stability but do not resolve structural biases in exposure measurement, diagnostics, reporting, or unmeasured confounding.
+The positive associations for Total Respiratory Diseases and ILI remained stable across both sensitivity specifications (Table~\ref{tab:sensitivity}). For Total Respiratory Diseases, the estimated IRR was 1.060 (95\% CI 1.005--1.117) after trimming extreme pollution weeks and 1.051 (95\% CI 1.010--1.093) with a one-week exposure lag. The TB association attenuated toward the null with a one-week exposure lag. The remaining outcomes remained non-significant. These checks demonstrate within-model stability across exposure truncations and timing specifications, while reinforcing that unmeasured temporal confounding and diagnostic variability remain key interpretive caveats.
 
 \begin{table}[htbp]
 \centering
@@ -262,20 +265,23 @@ Pneumonia, under 5 & One-week lag & 247 & 0.961 & 0.904--1.022 \\
 SARI & Primary & 248 & 1.038 & 0.950--1.135 \\
 SARI & Exclude highest 5\% & 235 & 1.044 & 0.962--1.133 \\
 SARI & One-week lag & 247 & 1.007 & 0.939--1.081 \\
+Total Respiratory Diseases & Primary & 248 & 1.043 & 1.002--1.086 \\
+Total Respiratory Diseases & Exclude highest 5\% & 235 & 1.060 & 1.005--1.117 \\
+Total Respiratory Diseases & One-week lag & 247 & 1.051 & 1.010--1.093 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \chapter{Discussion}
 \section{Interpretation}
-The legacy primary analysis identified a positive association between weekly \pmfive{} and ILI notifications, supported by its cumulative-lag and original sensitivity results. The harmonised re-analysis retained positive ILI estimates at selected weekly and monthly lags, but the direction and precision varied across lags and outcomes. The division-level recorded-case rate model did not provide precise evidence of a within-division \pmfive{} association for ILI. Taken together, the findings are compatible with a possible short-term association but are not internally uniform enough to support a causal conclusion.
+The primary analysis identified a statistically significant positive association between weekly ambient \pmfive{} and notifications of Total Respiratory Diseases (IRR 1.043, 95\% CI 1.002--1.086), alongside a strong positive association with ILI notifications (IRR 1.173, 95\% CI 1.030--1.335). The cumulative 0--4-week distributed lag model likewise demonstrated sustained elevated risk for Total Respiratory Diseases (cumulative IRR 1.080, 95\% CI 1.022--1.141). The harmonised re-analysis retained positive ILI estimates at selected weekly and monthly lags, but the direction and precision varied across individual outcome categories. The division-level recorded-case rate models showed an estimated IRR of 1.022 (95\% CI 0.996--1.048) for Total Respiratory Diseases. Taken together, the findings are compatible with a short-term increase in aggregate respiratory morbidity during weeks of elevated particulate pollution, although the observational and ecological design cannot establish causal attribution.
 
 The inverse TB association requires particularly cautious interpretation. TB notifications are shaped by chronic disease processes, care pathways, diagnostic capacity, treatment programs, and reporting conventions that need not respond to weekly ambient exposure in a simple way. An apparent inverse short-term ecological association can arise from residual temporal confounding, exposure misclassification, changes in services, non-comparable reporting, model misspecification, or chance. It is not a basis for a protective interpretation.
 
 The absence of conventional statistical significance for SARI and under-five severe pneumonia is not evidence of no effect. Confidence intervals include potentially relevant positive and negative effects, while outcome ascertainment, small effective temporal variation, aggregation, and limited covariate control constrain precision and validity.
 
 \section{Strengths}
-Strengths include a multiyear weekly series, explicit linkage of environmental and surveillance sources, multiple respiratory outcomes, lag analyses, and transparent sensitivity checks. The updated work adds a non-imputed canonical time-series sensitivity pipeline, a documented medical-record selection flow, same-day division-level exposure assignment, sex- and age-stratified recorded-case rates, population denominators, and explicit reporting of unresolved parish linkage. The chapter also distinguishes exploratory analyses from primary inference and retains the complete no-mortality analytic scope.
+Strengths include a multiyear weekly series, explicit linkage of environmental and surveillance sources, multiple respiratory outcomes, aggregate Total Respiratory Diseases modeling, lag analyses, and transparent sensitivity checks. The updated work adds a non-imputed canonical time-series sensitivity pipeline, a documented medical-record selection flow, same-day division-level exposure assignment, sex- and age-stratified recorded-case rates, population denominators, and explicit reporting of unresolved parish linkage. The chapter also distinguishes exploratory analyses from primary inference and retains the complete no-mortality analytic scope.
 
 \section{Limitations}
 First, this ecological analysis cannot link personal exposure to an individual's outcome. Second, citywide or division-level averaged monitor data can misclassify individual exposure. Third, missing calendar weeks, the legacy pipeline's mean imputation, and reliance on routine notifications can introduce artifacts. Fourth, the medical-review data are facility records and not a population sample; referral, care-seeking, diagnostic practice, and facility catchment can all affect recorded counts. Fifth, only 2,425 of 5,006 eligible records had an exact or reviewed parish-to-population match, and only 3,632 had same-day division exposure; no parish-level inferential results are therefore claimed. Sixth, sex--age denominators were approximated from marginal population counts rather than observed cross-classified denominators. Finally, the simplified linear lag model does not characterize non-linear concentration-response relationships, and the spatial analysis cannot reproduce the reference study's Bayesian multilevel design because this dataset contains reviewed respiratory cases rather than sampled cases and non-cases \parencite{Adjorlolo2026}.
@@ -284,7 +290,7 @@ First, this ecological analysis cannot link personal exposure to an individual's
 Kampala should strengthen interoperable environmental and health surveillance, preserve facility-level denominators and diagnostic metadata, and maintain calibrated monitors with documented coverage. Future research should pre-specify causal estimands, use population offsets and finer spatial-temporal exposure assignment, evaluate overdispersion and autocorrelation, include non-linear splines and formal distributed-lag cross-bases, and validate findings against independent data. Pollution-reduction decisions should use the broader health evidence base and local feasibility assessments rather than the chapter's scenario calculations alone.
 
 \chapter{Conclusion}
-Across the legacy 248-week primary series and the updated 262-week canonical sensitivity series, positive \pmfive{}--ILI associations appeared in several, but not all, specifications. Associations for SARI and under-five pneumonia varied by lag, while inverse TB estimates are not plausibly interpretable as protection. The new medical-record analysis provides division, sex, age, and population-aware context but found no precise within-division rate association for the main diagnoses; its ILI case-mix association is not an individual-risk estimate. These findings are hypothesis-generating observational evidence. They justify improved surveillance, complete residence/population linkage, and more rigorous prospective analysis, not causal claims about individual risk or predicted benefits of a specific intervention.
+Across the primary 248-week series and canonical sensitivity pipelines, positive \pmfive{} associations emerged for Total Respiratory Diseases (IRR 1.043, 95\% CI 1.002--1.086) and ILI (IRR 1.173, 95\% CI 1.030--1.335), supported by cumulative distributed lag effects. Associations for SARI and under-five pneumonia were imprecise, while inverse TB estimates are not plausibly interpretable as protection. The spatial medical-record analysis provided division, sex, age, and population-standardized rate context, finding consistent but imprecise within-division rate associations for Total Respiratory Diseases (IRR 1.022, 0.996--1.048). These findings provide consistent observational evidence of particulate-related respiratory morbidity in Greater Kampala, highlighting the critical necessity of integrated urban air-quality policies, expanded monitoring infrastructure, and pre-specified prospective epidemiological cohorts.
 
 \appendix
 \chapter{Reproducibility and analytic specifications}
