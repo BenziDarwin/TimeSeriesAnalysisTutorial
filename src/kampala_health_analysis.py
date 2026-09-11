@@ -251,6 +251,21 @@ def build_spatial_panel(data_dir: Path = DATA_DIR, frequency="W-SUN") -> tuple[p
     # day-to-day PM2.5 variation within a division from between-division contrast.
     counts["pm2_5_division_mean"] = counts.groupby("division")["pm2_5"].transform("mean")
     counts["pm2_5_within_division"] = counts["pm2_5"] - counts["pm2_5_division_mean"]
+    
+    # Aggregate across diagnoses to create a 'Total Respiratory Diseases' stratum
+    total_counts = counts.groupby(["division", "period", "sex", "age_band"], as_index=False).agg(
+        recorded_cases=("recorded_cases", "sum"),
+        pm2_5=("pm2_5", "first"),
+        monitor_sites=("monitor_sites", "first"),
+        facilities=("facilities", "sum"),
+        population_offset=("population_offset", "first"),
+        pm2_5_division_mean=("pm2_5_division_mean", "first"),
+        pm2_5_within_division=("pm2_5_within_division", "first"),
+    )
+    total_counts["diagnosis"] = "Total Respiratory Diseases"
+    total_counts["recorded_rate_per_100k"] = total_counts.recorded_cases / total_counts.population_offset * 100000
+    counts = pd.concat([counts, total_counts], ignore_index=True)
+    
     quality = pd.DataFrame({
         "metric": ["medical_records_linked_window", "parish_exact_or_reviewed_match", "records_with_same_day_division_pm25", "monitor_days", "monitor_sites"],
         "value": [len(medical), int(medical.parish_matched.sum()), int(medical.pm2_5.notna().sum()), monitor.date.nunique(), monitor.site_id.nunique()],
@@ -349,6 +364,10 @@ def diagnosis_population_rate_summary(records: pd.DataFrame, population: pd.Data
     division_population = population_denominator_summary(population)[["division", "population_total"]]
     observed_years = data.groupby("division", as_index=False).agg(observed_years=("year", "nunique"))
     rates = data.groupby(["division", "diagnosis"], as_index=False).agg(recorded_cases=("diagnosis", "size"))
+    # Add Total Respiratory Diseases row across all diagnoses
+    total_rates = data.groupby("division", as_index=False).agg(recorded_cases=("diagnosis", "size"))
+    total_rates["diagnosis"] = "Total Respiratory Diseases"
+    rates = pd.concat([rates, total_rates], ignore_index=True)
     rates = rates.merge(division_population, on="division", how="left", validate="many_to_one")
     rates = rates.merge(observed_years, on="division", how="left", validate="many_to_one")
     rates["annualized_recorded_rate_per_100k"] = (
