@@ -1,0 +1,1 @@
+http://ubos.geo-solutions.it/geoserver/wfs?access_token=d88ee0cabf6a11e9b66d0242ac120005?format_options=charset%3AUTF-8&typename=geonode%3Auganda_parishes_cleaned_attached&outputFormat=SHAPE-ZIP&version=1.0.0&service=WFS&request=GetFeature&access_token=d88ee0cabf6a11e9b66d0242ac120005
